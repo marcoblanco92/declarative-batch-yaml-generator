@@ -6,9 +6,9 @@ import com.marbl.generator.model.mapper.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DrawioToYamlMapper {
+public class DrawioToDtoMapper {
 
-    public BulkDto mapToBulkYml(DrawioParsed drawioParsed) {
+    public BulkDto mapToBulkDto(DrawioParsed drawioParsed) {
 
         List<DrawioComponent> components = drawioParsed.getComponents();
         List<DrawioEdge> edges = drawioParsed.getEdges();
@@ -110,9 +110,6 @@ public class DrawioToYamlMapper {
                 default -> {}
             }
         }
-
-
-
 
         // --- Crea JobYml ---
         DrawioJob jobComp = components.stream()

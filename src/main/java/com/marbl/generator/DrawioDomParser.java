@@ -3,6 +3,8 @@ package com.marbl.generator;
 import com.marbl.generator.enums.EdgeType;
 import com.marbl.generator.model.mapper.BulkDto;
 import com.marbl.generator.model.drawio.*;
+import com.marbl.generator.model.yml.BulkYml;
+import com.marbl.generator.model.yml.RootYml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -265,9 +267,14 @@ public class DrawioDomParser {
             System.out.println(edge);
         }
 
-        DrawioToYamlMapper mapper = new DrawioToYamlMapper();
-        BulkDto bulkDto = mapper.mapToBulkYml(components);
+        DrawioToDtoMapper mapper = new DrawioToDtoMapper();
+        BulkDto bulkDto = mapper.mapToBulkDto(components);
         System.out.println(bulkDto);
+
+        DtoToYmlMapper mapper2 = new DtoToYmlMapper();
+        RootYml rootYml = mapper2.mapToRootYaml(bulkDto);
+        System.out.println(rootYml);
+
 
     }
 }
