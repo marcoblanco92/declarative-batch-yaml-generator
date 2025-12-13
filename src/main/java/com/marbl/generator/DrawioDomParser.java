@@ -3,10 +3,8 @@ package com.marbl.generator;
 import com.marbl.generator.enums.EdgeType;
 import com.marbl.generator.dto.*;
 import com.marbl.generator.model.BulkYml;
-import com.marbl.generator.model.JobYml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -89,8 +87,8 @@ public class DrawioDomParser {
             }
 
             // -------------------------------------------------------
-            // 4️⃣ Parsing EDGE direttamente dalle mxCell edge="1"
-            // -------------------------------------------------------
+// 4️⃣ Parsing EDGE direttamente dalle mxCell edge="1"
+// -------------------------------------------------------
             for (int i = 0; i < objects.getLength(); i++) {
                 Element obj = (Element) objects.item(i);
 
@@ -109,16 +107,26 @@ public class DrawioDomParser {
                     Element cell = (Element) childCells.item(j);
                     if (!"1".equals(cell.getAttribute("edge"))) continue; // solo edge
 
-                    String id = cell.getAttribute("id");
+                    String id = obj.getAttribute("id");
                     String sourceId = cell.getAttribute("source");
                     String targetId = cell.getAttribute("target");
                     String condition = null;
 
-                    // Controlla se esiste un oggetto figlio con condition_value
-                    NodeList conditionObjects = obj.getElementsByTagName("object");
-                    if (conditionObjects.getLength() > 0) {
-                        Element condObj = (Element) conditionObjects.item(0);
-                        condition = condObj.getAttribute("condition_value");
+                    if (type == EdgeType.ON_CONDITION) {
+                        // Cerca un object il cui mxCell ha parent = id dell'object OnCondition
+                        NodeList allObjects = obj.getOwnerDocument().getElementsByTagName("object");
+                        for (int k = 0; k < allObjects.getLength(); k++) {
+                            Element possibleCondObj = (Element) allObjects.item(k);
+                            NodeList possibleCells = possibleCondObj.getElementsByTagName("mxCell");
+                            for (int m = 0; m < possibleCells.getLength(); m++) {
+                                Element condCell = (Element) possibleCells.item(m);
+                                if (id.equals(condCell.getAttribute("parent"))) {
+                                    condition = possibleCondObj.getAttribute("condition_value");
+                                    break;
+                                }
+                            }
+                            if (condition != null) break;
+                        }
                     }
 
                     DrawioEdge edge = DrawioEdge.builder()
@@ -134,25 +142,13 @@ public class DrawioDomParser {
             }
 
 
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return new ParsedDrawio(components, edges);
-    }
-
-    private Element findEdgeObject(NodeList objects, String mxCellId) {
-        for (int i = 0; i < objects.getLength(); i++) {
-            Element obj = (Element) objects.item(i);
-            NodeList childCells = obj.getElementsByTagName("mxCell");
-            for (int j = 0; j < childCells.getLength(); j++) {
-                Element child = (Element) childCells.item(j);
-                if (mxCellId.equals(child.getAttribute("id"))) {
-                    return obj;
-                }
-            }
-        }
-        return null;
     }
 
     private boolean isEdgeSource(String source) {
@@ -254,23 +250,6 @@ public class DrawioDomParser {
 
             default -> new DrawioComponent(id, source, name, type, parentId);
         };
-    }
-
-    // -------------------------------------------------------
-    // Utility: trova object padre di un mxCell edge
-    // -------------------------------------------------------
-    private Element findParentObject(NodeList objects, String mxCellId) {
-        for (int i = 0; i < objects.getLength(); i++) {
-            Element obj = (Element) objects.item(i);
-            NodeList cells = obj.getElementsByTagName("mxCell");
-            if (cells.getLength() > 0) {
-                Element cell = (Element) cells.item(0);
-                if (mxCellId.equals(cell.getAttribute("id"))) {
-                    return obj;
-                }
-            }
-        }
-        return null;
     }
 
 
