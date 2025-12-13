@@ -1,9 +1,12 @@
 package com.marbl.generator;
 
 import com.marbl.generator.enums.EdgeType;
-import com.marbl.generator.model.*;
+import com.marbl.generator.dto.*;
+import com.marbl.generator.model.BulkYml;
+import com.marbl.generator.model.JobYml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -88,34 +91,61 @@ public class DrawioDomParser {
             // -------------------------------------------------------
             // 4️⃣ Parsing EDGE direttamente dalle mxCell edge="1"
             // -------------------------------------------------------
+            // 1️⃣ Mappa mxCell edge ID -> EdgeType
+            Map<String, EdgeType> edgeTypeMap = new HashMap<>();
+            for (int i = 0; i < objects.getLength(); i++) {
+                Element obj = (Element) objects.item(i);
+                String objSource = obj.getAttribute("source"); // Next, SimpleFlow, OnCondition
+                EdgeType type = switch (objSource) {
+                    case "Next" -> EdgeType.NEXT;
+                    case "SimpleFlow" -> EdgeType.SIMPLE_FLOW;
+                    case "OnCondition" -> EdgeType.ON_CONDITION;
+                    default -> null;
+                };
+                if (type == null) continue;
+
+                NodeList childCells = obj.getElementsByTagName("mxCell");
+                for (int j = 0; j < childCells.getLength(); j++) {
+                    Element cell = (Element) childCells.item(j);
+                    if (!"1".equals(cell.getAttribute("edge"))) continue; // solo edge
+                    String cellId = cell.getAttribute("id");
+                    edgeTypeMap.put(cellId, type);
+                }
+            }
+
+// 2️⃣ Scansiona mxCells per creare DrawioEdge
             for (int i = 0; i < mxCells.getLength(); i++) {
                 Element cell = (Element) mxCells.item(i);
-
                 if (!"1".equals(cell.getAttribute("edge"))) continue;
 
                 String id = cell.getAttribute("id");
                 String sourceId = cell.getAttribute("source");
                 String targetId = cell.getAttribute("target");
-                String value = cell.getAttribute("value"); // Next / OnCondition / SimpleFlow
                 String condition = cell.getAttribute("condition_value");
+                String style = cell.getAttribute("style"); // contiene informazioni visive
 
-                EdgeType edgeType = switch (value) {
-                    case "Next" -> EdgeType.NEXT;
-                    case "SimpleFlow" -> EdgeType.SIMPLE_FLOW;
-                    case "OnCondition" -> EdgeType.ON_CONDITION;
-                    default -> EdgeType.UNKNOWN;
-                };
+                EdgeType type;
+                if (style != null && style.contains("dashed=1")) {
+                    type = EdgeType.ON_CONDITION;
+                } else if (style != null && style.contains("endArrow=classic")) {
+                    type = EdgeType.NEXT; // puoi affinare distinguendo SimpleFlow con altre proprietà
+                } else {
+                    type = EdgeType.UNKNOWN;
+                }
 
                 DrawioEdge edge = DrawioEdge.builder()
                         .id(id)
+                        .type(type)
                         .sourceId(sourceId)
                         .targetId(targetId)
-                        .type(edgeType)
                         .condition(condition)
                         .build();
 
                 edges.add(edge);
             }
+
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,6 +154,19 @@ public class DrawioDomParser {
         return new ParsedDrawio(components, edges);
     }
 
+    private Element findEdgeObject(NodeList objects, String mxCellId) {
+        for (int i = 0; i < objects.getLength(); i++) {
+            Element obj = (Element) objects.item(i);
+            NodeList childCells = obj.getElementsByTagName("mxCell");
+            for (int j = 0; j < childCells.getLength(); j++) {
+                Element child = (Element) childCells.item(j);
+                if (mxCellId.equals(child.getAttribute("id"))) {
+                    return obj;
+                }
+            }
+        }
+        return null;
+    }
 
     private boolean isEdgeSource(String source) {
         return "Next".equals(source)
@@ -255,5 +298,10 @@ public class DrawioDomParser {
         for (DrawioEdge edge : components.getEdges()) {
             System.out.println(edge);
         }
+
+        DrawioToYamlMapper mapper = new DrawioToYamlMapper();
+        BulkYml bulkYml = mapper.mapToBulkYml(components);
+        System.out.println(bulkYml);
+
     }
 }

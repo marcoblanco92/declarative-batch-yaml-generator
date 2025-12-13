@@ -1,4 +1,4 @@
-package com.marbl.generator.model;
+package com.marbl.generator.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

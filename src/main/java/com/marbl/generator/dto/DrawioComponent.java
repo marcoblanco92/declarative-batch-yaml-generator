@@ -1,4 +1,4 @@
-package com.marbl.generator.model;
+package com.marbl.generator.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
