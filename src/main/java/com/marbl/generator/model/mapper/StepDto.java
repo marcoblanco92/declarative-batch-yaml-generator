@@ -1,4 +1,4 @@
-package com.marbl.generator.model;
+package com.marbl.generator.model.mapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,13 +14,13 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StepYml implements Step {
+public class StepDto implements Step {
     private String name;
     private Integer chunkSize;          // se chunk-oriented
-    private ReaderYml reader;
-    private ProcessorYml processor;
-    private WriterYml writer;
-    private List<ListenerYml> listeners = new ArrayList<>();
+    private ReaderDto reader;
+    private ProcessorDto processor;
+    private WriterDto writer;
+    private List<ListenerDto> listeners = new ArrayList<>();
     private Map<String, String> conditionalNext = new HashMap<>(); // flussi condizionali: condizione -> stepName
     private String nextStep;            // step successivo (Next/SimpleFlow)
 }

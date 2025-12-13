@@ -1,4 +1,4 @@
-package com.marbl.generator.dto;
+package com.marbl.generator.model.drawio;
 
 import com.marbl.generator.enums.EdgeType;
 import lombok.AllArgsConstructor;

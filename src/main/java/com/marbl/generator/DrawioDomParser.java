@@ -1,8 +1,8 @@
 package com.marbl.generator;
 
 import com.marbl.generator.enums.EdgeType;
-import com.marbl.generator.dto.*;
-import com.marbl.generator.model.BulkYml;
+import com.marbl.generator.model.mapper.BulkDto;
+import com.marbl.generator.model.drawio.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -14,7 +14,7 @@ import java.util.*;
 
 public class DrawioDomParser {
 
-    public ParsedDrawio parse(File file) {
+    public DrawioParsed parse(File file) {
         List<DrawioComponent> components = new ArrayList<>();
         List<DrawioEdge> edges = new ArrayList<>();
 
@@ -148,7 +148,7 @@ public class DrawioDomParser {
             e.printStackTrace();
         }
 
-        return new ParsedDrawio(components, edges);
+        return new DrawioParsed(components, edges);
     }
 
     private boolean isEdgeSource(String source) {
@@ -171,7 +171,7 @@ public class DrawioDomParser {
     ) {
         return switch (source) {
             case "DataSource" -> {
-                DataSourceComponent ds = new DataSourceComponent();
+                DrawioDataSource ds = new DrawioDataSource();
                 ds.setId(id);
                 ds.setSource(source);
                 ds.setName(name);
@@ -181,7 +181,7 @@ public class DrawioDomParser {
                 yield ds;
             }
             case "Job" -> {
-                JobComponent job = new JobComponent();
+                DrawioJob job = new DrawioJob();
                 job.setId(id);
                 job.setSource(source);
                 job.setName(name);
@@ -190,7 +190,7 @@ public class DrawioDomParser {
                 yield job;
             }
             case "Step" -> {
-                StepComponent step = new StepComponent();
+                DrawioStep step = new DrawioStep();
                 step.setId(id);
                 step.setSource(source);
                 step.setName(name);
@@ -204,7 +204,7 @@ public class DrawioDomParser {
                 yield step;
             }
             case "Reader" -> {
-                ReaderComponent r = new ReaderComponent();
+                DrawioReader r = new DrawioReader();
                 r.setId(id);
                 r.setSource(source);
                 r.setName(name);
@@ -213,7 +213,7 @@ public class DrawioDomParser {
                 yield r;
             }
             case "Processor" -> {
-                ProcessorComponent p = new ProcessorComponent();
+                DrawioProcessor p = new DrawioProcessor();
                 p.setId(id);
                 p.setSource(source);
                 p.setName(name);
@@ -222,7 +222,7 @@ public class DrawioDomParser {
                 yield p;
             }
             case "Writer" -> {
-                WriterComponent w = new WriterComponent();
+                DrawioWriter w = new DrawioWriter();
                 w.setId(id);
                 w.setSource(source);
                 w.setName(name);
@@ -231,7 +231,7 @@ public class DrawioDomParser {
                 yield w;
             }
             case "Listener" -> {
-                ListenerComponent l = new ListenerComponent();
+                DrawioListener l = new DrawioListener();
                 l.setId(id);
                 l.setSource(source);
                 l.setName(name);
@@ -240,7 +240,7 @@ public class DrawioDomParser {
                 yield l;
             }
             case "Tasklet" -> {
-                TaskletComponent t = new TaskletComponent();
+                DrawioTasklet t = new DrawioTasklet();
                 t.setId(id);
                 t.setSource(source);
                 t.setName(name);
@@ -256,7 +256,7 @@ public class DrawioDomParser {
     public static void main(String[] args) {
         File file = new File("Poc_example.drawio"); // Inserisci il percorso corretto
         DrawioDomParser parser = new DrawioDomParser();
-        ParsedDrawio components = parser.parse(file);
+        DrawioParsed components = parser.parse(file);
 
         for (DrawioComponent component : components.getComponents()) {
             System.out.println(component);
@@ -266,8 +266,8 @@ public class DrawioDomParser {
         }
 
         DrawioToYamlMapper mapper = new DrawioToYamlMapper();
-        BulkYml bulkYml = mapper.mapToBulkYml(components);
-        System.out.println(bulkYml);
+        BulkDto bulkDto = mapper.mapToBulkYml(components);
+        System.out.println(bulkDto);
 
     }
 }

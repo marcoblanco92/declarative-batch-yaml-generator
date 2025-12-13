@@ -1,4 +1,4 @@
-package com.marbl.generator.dto;
+package com.marbl.generator.model.drawio;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,6 +7,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ListenerComponent extends DrawioComponent {
-    private String listenerType;
+public class DrawioTasklet extends DrawioComponent {
 }

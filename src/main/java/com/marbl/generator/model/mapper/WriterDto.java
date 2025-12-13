@@ -1,4 +1,4 @@
-package com.marbl.generator.model;
+package com.marbl.generator.model.mapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +12,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskletYml implements Step {
+public class WriterDto {
     private String name;
-    private Map<String, String> conditionalNext = new HashMap<>(); // flussi condizionali: condizione -> stepName
-    private String nextStep;
+    private String type;
+    private Map<String, String> properties = new HashMap<>();
 }

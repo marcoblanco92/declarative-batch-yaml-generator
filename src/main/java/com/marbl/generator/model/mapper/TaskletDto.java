@@ -1,5 +1,4 @@
-package com.marbl.generator.model;
-
+package com.marbl.generator.model.mapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +12,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReaderYml {
+public class TaskletDto implements Step {
     private String name;
-    private String type;     // FlatFileItemReader, JdbcPagingItemReader, ecc.
-    private Map<String, String> properties = new HashMap<>();
+    private Map<String, String> conditionalNext = new HashMap<>(); // flussi condizionali: condizione -> stepName
+    private String nextStep;
 }

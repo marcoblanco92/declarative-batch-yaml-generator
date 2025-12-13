@@ -1,4 +1,4 @@
-package com.marbl.generator.model;
+package com.marbl.generator.model.mapper;
 
 
 import lombok.AllArgsConstructor;
@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JobYml {
+public class JobDto {
     private String name;
     private List<Step> steps = new ArrayList<>();
-    private ListenerYml listener;
+    private ListenerDto listener;
 }

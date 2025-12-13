@@ -1,4 +1,5 @@
-package com.marbl.generator.model;
+package com.marbl.generator.model.mapper;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +13,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WriterYml {
+public class ReaderDto {
     private String name;
-    private String type;
+    private String type;     // FlatFileItemReader, JdbcPagingItemReader, ecc.
     private Map<String, String> properties = new HashMap<>();
 }

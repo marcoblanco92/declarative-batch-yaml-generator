@@ -1,4 +1,4 @@
-package com.marbl.generator.model;
+package com.marbl.generator.model.mapper;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProcessorYml {
+public class ListenerDto {
     private String name;
-    private String type;     // ItemProcessor o personalizzato
+    private String type;     // StepExecutionListener, JobExecutionListener
 }

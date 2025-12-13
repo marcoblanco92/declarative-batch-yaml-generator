@@ -1,16 +1,18 @@
-package com.marbl.generator.model;
-
+package com.marbl.generator.model.mapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ListenerYml {
-    private String name;
-    private String type;     // StepExecutionListener, JobExecutionListener
+public class BulkDto {
+
+    private JobDto job;
+    private List<DataSourceDto> dataSources;
 }
