@@ -1,9 +1,8 @@
 package com.marbl.generator;
 
 import com.marbl.generator.enums.EdgeType;
-import com.marbl.generator.model.mapper.BulkDto;
 import com.marbl.generator.model.drawio.*;
-import com.marbl.generator.model.yml.BulkYml;
+import com.marbl.generator.model.mapper.BulkDto;
 import com.marbl.generator.model.yml.RootYml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,6 +11,9 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
 import java.util.*;
 
 public class DrawioDomParser {
@@ -255,7 +257,7 @@ public class DrawioDomParser {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         File file = new File("Poc_example.drawio"); // Inserisci il percorso corretto
         DrawioDomParser parser = new DrawioDomParser();
         DrawioParsed components = parser.parse(file);
@@ -275,6 +277,8 @@ public class DrawioDomParser {
         RootYml rootYml = mapper2.mapToRootYaml(bulkDto);
         System.out.println(rootYml);
 
-
+        BulkYmlWriter bulkYmlWriter = new BulkYmlWriter();
+        String yml = bulkYmlWriter.writeAsString(rootYml);
+        System.out.println(yml);
     }
 }
