@@ -91,10 +91,9 @@ public class DrawioDomParser {
             // -------------------------------------------------------
             // 4️⃣ Parsing EDGE direttamente dalle mxCell edge="1"
             // -------------------------------------------------------
-            // 1️⃣ Mappa mxCell edge ID -> EdgeType
-            Map<String, EdgeType> edgeTypeMap = new HashMap<>();
             for (int i = 0; i < objects.getLength(); i++) {
                 Element obj = (Element) objects.item(i);
+
                 String objSource = obj.getAttribute("source"); // Next, SimpleFlow, OnCondition
                 EdgeType type = switch (objSource) {
                     case "Next" -> EdgeType.NEXT;
@@ -104,47 +103,35 @@ public class DrawioDomParser {
                 };
                 if (type == null) continue;
 
+                // Leggiamo eventuali mxCell figli (edge veri e propri)
                 NodeList childCells = obj.getElementsByTagName("mxCell");
                 for (int j = 0; j < childCells.getLength(); j++) {
                     Element cell = (Element) childCells.item(j);
                     if (!"1".equals(cell.getAttribute("edge"))) continue; // solo edge
-                    String cellId = cell.getAttribute("id");
-                    edgeTypeMap.put(cellId, type);
+
+                    String id = cell.getAttribute("id");
+                    String sourceId = cell.getAttribute("source");
+                    String targetId = cell.getAttribute("target");
+                    String condition = null;
+
+                    // Controlla se esiste un oggetto figlio con condition_value
+                    NodeList conditionObjects = obj.getElementsByTagName("object");
+                    if (conditionObjects.getLength() > 0) {
+                        Element condObj = (Element) conditionObjects.item(0);
+                        condition = condObj.getAttribute("condition_value");
+                    }
+
+                    DrawioEdge edge = DrawioEdge.builder()
+                            .id(id)
+                            .type(type)
+                            .sourceId(sourceId)
+                            .targetId(targetId)
+                            .condition(condition)
+                            .build();
+
+                    edges.add(edge);
                 }
             }
-
-// 2️⃣ Scansiona mxCells per creare DrawioEdge
-            for (int i = 0; i < mxCells.getLength(); i++) {
-                Element cell = (Element) mxCells.item(i);
-                if (!"1".equals(cell.getAttribute("edge"))) continue;
-
-                String id = cell.getAttribute("id");
-                String sourceId = cell.getAttribute("source");
-                String targetId = cell.getAttribute("target");
-                String condition = cell.getAttribute("condition_value");
-                String style = cell.getAttribute("style"); // contiene informazioni visive
-
-                EdgeType type;
-                if (style != null && style.contains("dashed=1")) {
-                    type = EdgeType.ON_CONDITION;
-                } else if (style != null && style.contains("endArrow=classic")) {
-                    type = EdgeType.NEXT; // puoi affinare distinguendo SimpleFlow con altre proprietà
-                } else {
-                    type = EdgeType.UNKNOWN;
-                }
-
-                DrawioEdge edge = DrawioEdge.builder()
-                        .id(id)
-                        .type(type)
-                        .sourceId(sourceId)
-                        .targetId(targetId)
-                        .condition(condition)
-                        .build();
-
-                edges.add(edge);
-            }
-
-
 
 
         } catch (Exception e) {
