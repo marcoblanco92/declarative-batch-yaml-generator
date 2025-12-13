@@ -15,5 +15,4 @@ public class DrawioComponent {
     private String name;
     private String type;
     private String parentId;
-//    private GroupComponent groupComponent;
 }

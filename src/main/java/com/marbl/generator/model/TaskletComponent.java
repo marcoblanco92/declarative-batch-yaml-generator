@@ -11,5 +11,4 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class TaskletComponent extends DrawioComponent {
-    private List<DrawioComponent> nextComponents = new ArrayList<>();
 }
