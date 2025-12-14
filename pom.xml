@@ -20,6 +20,7 @@
     </properties>
 
     <dependencies>
+        <!-- Maven Plugin API -->
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
@@ -31,16 +32,12 @@
             <version>3.7.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Jackson e YAML -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.38</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -68,33 +65,47 @@
             <version>2.17.1</version>
         </dependency>
 
-
-
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.38</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Plugin descriptor generator -->
             <plugin>
-                <groupId>com.marbl.generator</groupId>
-                <artifactId>declarative-batch-yaml-generator</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.13.1</version>
+                <configuration>
+                    <goalPrefix>declarative-batch</goalPrefix>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>generate-batch-yaml</id>
-                        <phase>generate-sources</phase>
+                        <id>default-descriptor</id>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>descriptor</goal>
                         </goals>
-                        <configuration>
-                            <inputFile>${project.basedir}/src/main/resources/diagram.drawio</inputFile>
-                            <outputDir>${project.build.directory}/generated-resources/batch</outputDir>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Compiler plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-
 
 </project>

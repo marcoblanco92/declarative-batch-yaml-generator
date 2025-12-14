@@ -1,10 +1,13 @@
 package com.marbl.generator.model.yml.reader;
 
+import lombok.Getter;
+
 import java.util.Map;
 
+@Getter
 public enum PreConfiguredReader {
 
-    FLATFILERITEMEADER(Map.of(
+    FLAT_FILE_ITEM_READER(Map.of(
             "resource", "",
             "lineToSkip", 0,
             "delimiter", ";",
@@ -12,14 +15,14 @@ public enum PreConfiguredReader {
             "mappedClass", ""
     )),
 
-    JDBCCURSORITEMREADER(Map.of(
+    JDBC_CURSOR_ITEM_READER(Map.of(
             "datasource", "",
             "preparedStatementClass", "",
             "mappedClass", "",
             "sql", ""
     )),
 
-    JDBCPAGINGITEMREADER(Map.of(
+    JDBC_PAGING_ITEM_READER(Map.of(
             "datasource", "",
             "preparedStatementClass", "",
             "providerType", "",      // enum type, null di default
@@ -32,10 +35,6 @@ public enum PreConfiguredReader {
 
     PreConfiguredReader(Map<String, Object> config) {
         this.config = config;
-    }
-
-    public Map<String, Object> getConfig() {
-        return config;
     }
 
     public static Map<String, Object> getConfigByType(String type) {

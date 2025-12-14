@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProcessorDto {
     private String name;
-    private String type;     // ItemProcessor o personalizzato
+    private String type;
 }

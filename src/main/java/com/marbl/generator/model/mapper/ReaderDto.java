@@ -15,5 +15,5 @@ import java.util.Map;
 @Builder
 public class ReaderDto {
     private String name;
-    private String type;     // FlatFileItemReader, JdbcPagingItemReader, ecc.
+    private String type;
 }

@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ListenerDto {
     private String name;
-    private String type;     // StepExecutionListener, JobExecutionListener
+    private String type;
 }

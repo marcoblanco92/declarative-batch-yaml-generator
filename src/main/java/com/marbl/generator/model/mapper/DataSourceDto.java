@@ -16,6 +16,7 @@ import java.util.Map;
 public class DataSourceDto {
     private String name;
     private String type;
+    @Builder.Default
     private Map<String, String> properties = new HashMap<>();
     private boolean main;
 }

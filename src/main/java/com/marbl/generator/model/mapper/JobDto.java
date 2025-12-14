@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 public class JobDto {
     private String name;
+    @Builder.Default
     private List<Step> steps = new ArrayList<>();
     private ListenerDto listener;
 }

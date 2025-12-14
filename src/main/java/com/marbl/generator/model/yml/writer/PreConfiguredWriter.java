@@ -1,10 +1,15 @@
 package com.marbl.generator.model.yml.writer;
 
+import lombok.Getter;
+
 import java.util.Map;
 
+import static com.marbl.generator.utils.EnumNameNormalizer.normalize;
+
+@Getter
 public enum PreConfiguredWriter {
 
-    FLATFILEITEMWRITER(Map.of(
+    FLAT_FILE_ITEM_WRITER(Map.of(
             "resource", "",
             "delimiter", ",",
             "lineToSkip", 0,
@@ -14,7 +19,7 @@ public enum PreConfiguredWriter {
             "mappedClass", ""
     )),
 
-    JDBCBATCHITEMWRITER(Map.of(
+    JDBC_BATCH_ITEM_WRITER(Map.of(
             "datasource", "",
             "sql", "",
             "preparedStatementClass", "",
@@ -27,13 +32,16 @@ public enum PreConfiguredWriter {
         this.config = config;
     }
 
-    public Map<String, Object> getConfig() {
-        return config;
-    }
-
     public static Map<String, Object> getConfigByType(String type) {
+        if (type == null || type.isBlank()) {
+            return null;
+        }
+
+        String normalizedType = normalize
+                (type);
+
         for (PreConfiguredWriter writer : PreConfiguredWriter.values()) {
-            if (writer.name().equalsIgnoreCase(type)) {
+            if (writer.name().equals(normalizedType)) {
                 return writer.getConfig();
             }
         }

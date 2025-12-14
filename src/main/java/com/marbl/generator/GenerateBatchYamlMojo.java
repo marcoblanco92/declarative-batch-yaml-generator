@@ -1,55 +1,81 @@
 package com.marbl.generator;
 
 
+import com.marbl.generator.mapper.drawio.DrawioToDtoMapper;
+import com.marbl.generator.mapper.dto.DtoToYmlMapper;
 import com.marbl.generator.model.drawio.DrawioParsed;
 import com.marbl.generator.model.mapper.BulkDto;
 import com.marbl.generator.model.yml.RootYml;
+import com.marbl.generator.parser.DrawioDomParser;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-
 import java.io.File;
 
-/**
- * Maven plugin to generate declarative batch YAML from draw.io
- */
 @Mojo(name = "generate")
 public class GenerateBatchYamlMojo extends AbstractMojo {
 
-    /**
-     * Input file (draw.io XML)
-     */
     @Parameter(property = "inputFile", required = true)
     private File inputFile;
 
-    /**
-     * Output directory for the generated YAML
-     */
-    @Parameter(property = "outputDir", defaultValue = "${project.build.directory}/generated-resources/batch")
+    @Parameter(
+            property = "outputDir",
+            defaultValue = "${project.build.directory}/generated-resources/batch"
+    )
     private File outputDir;
+
+    @Parameter(
+            property = "logging.basePackage",
+            defaultValue = "${project.groupId}"
+    )
+    private String loggingBasePackage;
 
     @Override
     public void execute() throws MojoExecutionException {
-        getLog().info("Starting YAML generation...");
-        getLog().info("Input file: " + inputFile.getAbsolutePath());
-        getLog().info("Output directory: " + outputDir.getAbsolutePath());
+        getLog().info("Generating declarative batch YAML from draw.io");
+
+        validateInputFile();
+        prepareOutputDir();
 
         try {
-            if (!outputDir.exists()) {
-                outputDir.mkdirs();
-            }
-
             DrawioParsed drawioParsed = DrawioDomParser.parse(inputFile);
             BulkDto bulkDto = DrawioToDtoMapper.mapToBulkDto(drawioParsed);
-            RootYml rootYml = DtoToYmlMapper.mapToRootYaml(bulkDto);
-            BulkYmlWriter.write(rootYml, outputDir);
+            RootYml rootYml = DtoToYmlMapper.mapToRootYaml(bulkDto, loggingBasePackage);
 
-            getLog().info("YAML generation completed successfully.");
+            File outputFile = new File(outputDir, "application-generated.yml");
+            getLog().info("Writing YAML to: " + outputFile.getAbsolutePath());
+
+            BulkYmlWriter.write(rootYml, outputFile);
+
+            getLog().info("YAML generated successfully: " + outputFile.getAbsolutePath());
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to generate YAML", e);
         }
     }
+
+    private void validateInputFile() throws MojoExecutionException {
+        if (!inputFile.exists() || !inputFile.isFile()) {
+            throw new MojoExecutionException(
+                    "Input file does not exist or is not a file: " + inputFile.getAbsolutePath()
+            );
+        }
+    }
+
+    private void prepareOutputDir() throws MojoExecutionException {
+        if (outputDir.exists() && !outputDir.isDirectory()) {
+            throw new MojoExecutionException(
+                    "Output path is not a directory: " + outputDir.getAbsolutePath()
+            );
+        }
+
+        if (!outputDir.exists() && !outputDir.mkdirs()) {
+            throw new MojoExecutionException(
+                    "Failed to create output directory: " + outputDir.getAbsolutePath()
+            );
+        }
+    }
 }
+
 

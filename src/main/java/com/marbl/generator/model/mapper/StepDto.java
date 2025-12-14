@@ -16,12 +16,14 @@ import java.util.Map;
 @Builder
 public class StepDto implements Step {
     private String name;
-    private Integer chunkSize;          // se chunk-oriented
+    private Integer chunkSize;
     private ReaderDto reader;
     private ProcessorDto processor;
     private WriterDto writer;
+    @Builder.Default
     private List<ListenerDto> listeners = new ArrayList<>();
-    private Map<String, String> conditionalNext = new HashMap<>(); // flussi condizionali: condizione -> stepName
-    private String nextStep;            // step successivo (Next/SimpleFlow)
+    @Builder.Default
+    private Map<String, String> conditionalNext = new HashMap<>();
+    private String nextStep;
     private Integer order;
 }

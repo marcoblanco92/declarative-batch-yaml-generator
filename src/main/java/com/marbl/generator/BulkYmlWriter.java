@@ -19,34 +19,51 @@ public class BulkYmlWriter {
     private final ObjectMapper yamlMapper;
 
     static {
+        // Initialize YAML ObjectMapper with custom settings
         yamlMapper = new ObjectMapper(
                 new YAMLFactory()
-                        .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER) // niente ---
-                        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
+                        .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER) // Disable '---' document start marker
+                        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES) // Minimize quotes where possible
         );
 
+        // Register JavaTimeModule to support java.time types
         yamlMapper.registerModule(new JavaTimeModule());
+
+        // Exclude null values from serialization
         yamlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        // Write dates as ISO strings instead of timestamps
         yamlMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     /**
-     * Scrive il BulkYml su file YAML con root "bulk"
+     * Writes the RootYml object to a YAML file at the specified path.
+     *
+     * @param root       The RootYml object to serialize.
+     * @param outputPath The path of the output YAML file.
+     * @throws IOException If writing to the file fails.
      */
     public void write(RootYml root, Path outputPath) throws IOException {
-
         yamlMapper.writeValue(outputPath.toFile(), root);
     }
 
     /**
-     * Overload di comodità
+     * Convenience overload to write the RootYml object to a File.
+     *
+     * @param root       The RootYml object to serialize.
+     * @param outputFile The output YAML file.
+     * @throws IOException If writing to the file fails.
      */
     public void write(RootYml root, File outputFile) throws IOException {
         write(root, outputFile.toPath());
     }
 
     /**
-     * Overload per ottenere lo YAML come String
+     * Serializes the RootYml object to a YAML string.
+     *
+     * @param root The RootYml object to serialize.
+     * @return YAML string representation of the object.
+     * @throws IOException If serialization fails.
      */
     public String writeAsString(RootYml root) throws IOException {
         return yamlMapper.writeValueAsString(root);

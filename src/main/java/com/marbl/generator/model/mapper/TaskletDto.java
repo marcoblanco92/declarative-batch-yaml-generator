@@ -14,7 +14,8 @@ import java.util.Map;
 @Builder
 public class TaskletDto implements Step {
     private String name;
-    private Map<String, String> conditionalNext = new HashMap<>(); // flussi condizionali: condizione -> stepName
+    @Builder.Default
+    private Map<String, String> conditionalNext = new HashMap<>();
     private String nextStep;
     private Integer order;
 }
