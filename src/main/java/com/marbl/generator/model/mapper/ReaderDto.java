@@ -16,5 +16,4 @@ import java.util.Map;
 public class ReaderDto {
     private String name;
     private String type;     // FlatFileItemReader, JdbcPagingItemReader, ecc.
-    private Map<String, String> properties = new HashMap<>();
 }

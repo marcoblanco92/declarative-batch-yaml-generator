@@ -15,5 +15,4 @@ import java.util.Map;
 public class WriterDto {
     private String name;
     private String type;
-    private Map<String, String> properties = new HashMap<>();
 }

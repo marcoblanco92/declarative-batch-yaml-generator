@@ -12,8 +12,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Path;
 import java.util.*;
 
 public class DrawioDomParser {
@@ -235,12 +233,11 @@ public class DrawioDomParser {
                 w.setParentId(parentId);
                 yield w;
             }
-            case "Listener" -> {
-                DrawioListener l = new DrawioListener();
+            case "Listeners" -> {
+                DrawioListeners l = new DrawioListeners();
                 l.setId(id);
                 l.setSource(source);
                 l.setName(name);
-                l.setListenerType(type);
                 l.setParentId(parentId);
                 yield l;
             }

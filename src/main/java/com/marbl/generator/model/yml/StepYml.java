@@ -1,5 +1,6 @@
 package com.marbl.generator.model.yml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,6 @@ public class StepYml implements StepYmlBase {
 
     private String next;
 
-    private Map<String, String> conditionalNext;
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<TransitionYml> transitions;
 }

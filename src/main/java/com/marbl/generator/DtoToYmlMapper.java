@@ -80,6 +80,7 @@ public class DtoToYmlMapper {
     }
 
     private StepYml mapChunkStep(StepDto dto) {
+
         return StepYml.builder()
                 .name(dto.getName())
                 .chunk(dto.getChunkSize())
@@ -88,18 +89,17 @@ public class DtoToYmlMapper {
                 .writer(mapWriter(dto.getWriter()))
                 .listeners(mapStepListeners(dto))
                 .next(dto.getNextStep())
-                .conditionalNext(dto.getConditionalNext())
                 .transitions(mapTransitions(dto))
                 .build();
     }
 
     private TaskletYml mapTasklet(TaskletDto dto) {
+
         return TaskletYml.builder()
                 .name(dto.getName().concat("Step"))
                 .type("TASKLET")
                 .tasklet(dto.getName())
                 .next(dto.getNextStep())
-                .conditionalNext(dto.getConditionalNext())
                 .transitions(mapTransitions(dto))
                 .build();
     }
@@ -182,14 +182,6 @@ public class DtoToYmlMapper {
                         .build())
                 .build();
     }
-
-
-
-
-
-
-
-
 
 
 }

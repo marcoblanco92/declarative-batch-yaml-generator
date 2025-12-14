@@ -56,7 +56,6 @@ public class DrawioToDtoMapper {
                         stepDto.setReader(ReaderDto.builder()
                                 .name(reader.getName())
                                 .type(reader.getReaderType())
-                                .properties(new HashMap<>())
                                 .build());
                     } else if (child instanceof DrawioProcessor processor) {
                         stepDto.setProcessor(ProcessorDto.builder()
@@ -67,13 +66,19 @@ public class DrawioToDtoMapper {
                         stepDto.setWriter(WriterDto.builder()
                                 .name(writer.getName())
                                 .type(writer.getWriterType())
-                                .properties(new HashMap<>())
                                 .build());
-                    } else if (child instanceof DrawioListener listener) {
-                        stepDto.getListeners().add(ListenerDto.builder()
-                                .name(listener.getName())
-                                .type(listener.getListenerType())
-                                .build());
+                    } else if (child instanceof DrawioListeners listeners) {
+                        String listenersContainerId = listeners.getId();
+
+                        components.stream()
+                                .filter(component -> listenersContainerId.equals(component.getParentId()))
+                                .forEach(listener -> {
+                                    ListenerDto dto = ListenerDto.builder()
+                                            .name(listener.getName())
+                                            .type(listener.getType())
+                                            .build();
+                                    stepDto.getListeners().add(dto);
+                                });
                     }
                 }
             }

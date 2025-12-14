@@ -7,6 +7,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DrawioListener extends DrawioComponent {
-    private String listenerType;
+public class DrawioListeners extends DrawioComponent {
 }
