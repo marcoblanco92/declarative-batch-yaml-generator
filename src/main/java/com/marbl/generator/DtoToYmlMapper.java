@@ -2,6 +2,8 @@ package com.marbl.generator;
 
 import com.marbl.generator.model.mapper.*;
 import com.marbl.generator.model.yml.*;
+import com.marbl.generator.model.yml.reader.PreConfiguredReader;
+import com.marbl.generator.model.yml.writer.PreConfiguredWriter;
 
 import java.util.Comparator;
 import java.util.List;
@@ -127,7 +129,7 @@ public class DtoToYmlMapper {
         return ReaderYml.builder()
                 .name(dto.getName())
                 .type(dto.getType())
-                .config(null) //TODO da mappare in base al type
+                .config(PreConfiguredReader.getConfigByType(dto.getType()))
                 .build();
     }
 
@@ -146,7 +148,7 @@ public class DtoToYmlMapper {
         return WriterYml.builder()
                 .name(dto.getName())
                 .type(dto.getType())
-                .config(null) //TODO da mappare in base al type
+                .config(PreConfiguredWriter.getConfigByType(dto.getType()))
                 .build();
     }
 
