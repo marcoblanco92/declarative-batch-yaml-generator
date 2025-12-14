@@ -4,6 +4,7 @@ import com.marbl.generator.enums.EdgeType;
 import com.marbl.generator.model.drawio.*;
 import com.marbl.generator.model.mapper.BulkDto;
 import com.marbl.generator.model.yml.RootYml;
+import lombok.experimental.UtilityClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@UtilityClass
 public class DrawioDomParser {
 
     public DrawioParsed parse(File file) {
@@ -89,8 +91,8 @@ public class DrawioDomParser {
             }
 
             // -------------------------------------------------------
-// 4️⃣ Parsing EDGE direttamente dalle mxCell edge="1"
-// -------------------------------------------------------
+            // 4️⃣ Parsing EDGE direttamente dalle mxCell edge="1"
+            // -------------------------------------------------------
             for (int i = 0; i < objects.getLength(); i++) {
                 Element obj = (Element) objects.item(i);
 
@@ -256,28 +258,27 @@ public class DrawioDomParser {
     }
 
 
-    public static void main(String[] args) throws IOException {
-        File file = new File("Poc_example.drawio"); // Inserisci il percorso corretto
-        DrawioDomParser parser = new DrawioDomParser();
-        DrawioParsed components = parser.parse(file);
-
-        for (DrawioComponent component : components.getComponents()) {
-            System.out.println(component);
-        }
-        for (DrawioEdge edge : components.getEdges()) {
-            System.out.println(edge);
-        }
-
-        DrawioToDtoMapper mapper = new DrawioToDtoMapper();
-        BulkDto bulkDto = mapper.mapToBulkDto(components);
-        System.out.println(bulkDto);
-
-        DtoToYmlMapper mapper2 = new DtoToYmlMapper();
-        RootYml rootYml = mapper2.mapToRootYaml(bulkDto);
-        System.out.println(rootYml);
-
-        BulkYmlWriter bulkYmlWriter = new BulkYmlWriter();
-        String yml = bulkYmlWriter.writeAsString(rootYml);
-        System.out.println(yml);
-    }
+//    public static void main(String[] args) throws IOException {
+//        File file = new File("Poc_example.drawio"); // Inserisci il percorso corretto
+//        DrawioDomParser parser = new DrawioDomParser();
+//        DrawioParsed components = parser.parse(file);
+//
+//        for (DrawioComponent component : components.getComponents()) {
+//            System.out.println(component);
+//        }
+//        for (DrawioEdge edge : components.getEdges()) {
+//            System.out.println(edge);
+//        }
+//
+//        BulkDto bulkDto = DrawioToDtoMapper.mapToBulkDto(components);
+//        System.out.println(bulkDto);
+//
+//        DtoToYmlMapper mapper2 = new DtoToYmlMapper();
+//        RootYml rootYml = mapper2.mapToRootYaml(bulkDto);
+//        System.out.println(rootYml);
+//
+//        BulkYmlWriter bulkYmlWriter = new BulkYmlWriter();
+//        String yml = bulkYmlWriter.writeAsString(rootYml);
+//        System.out.println(yml);
+//    }
 }

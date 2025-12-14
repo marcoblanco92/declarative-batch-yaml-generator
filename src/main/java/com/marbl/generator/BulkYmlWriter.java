@@ -6,27 +6,28 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.marbl.generator.model.yml.BulkYml;
 import com.marbl.generator.model.yml.RootYml;
+import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+@UtilityClass
 public class BulkYmlWriter {
 
     private final ObjectMapper yamlMapper;
 
-    public BulkYmlWriter() {
-        this.yamlMapper = new ObjectMapper(
+    static {
+        yamlMapper = new ObjectMapper(
                 new YAMLFactory()
                         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER) // niente ---
                         .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
         );
 
-        this.yamlMapper.registerModule(new JavaTimeModule());
-        this.yamlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        this.yamlMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        yamlMapper.registerModule(new JavaTimeModule());
+        yamlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        yamlMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     /**

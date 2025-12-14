@@ -2,10 +2,12 @@ package com.marbl.generator;
 
 import com.marbl.generator.model.drawio.*;
 import com.marbl.generator.model.mapper.*;
+import lombok.experimental.UtilityClass;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class DrawioToDtoMapper {
 
     public BulkDto mapToBulkDto(DrawioParsed drawioParsed) {

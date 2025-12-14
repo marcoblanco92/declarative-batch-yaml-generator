@@ -25,6 +25,7 @@ public class StepYml implements StepYmlBase {
 
     private WriterYml writer;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<ListenerYml> listeners;
 
     private String next;

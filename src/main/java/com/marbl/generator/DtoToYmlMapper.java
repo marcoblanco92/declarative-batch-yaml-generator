@@ -4,18 +4,20 @@ import com.marbl.generator.model.mapper.*;
 import com.marbl.generator.model.yml.*;
 import com.marbl.generator.model.yml.reader.PreConfiguredReader;
 import com.marbl.generator.model.yml.writer.PreConfiguredWriter;
+import lombok.experimental.UtilityClass;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class DtoToYmlMapper {
 
     public RootYml mapToRootYaml(BulkDto bulkDto) {
         return RootYml.builder()
                 .bulk(mapBulk(bulkDto))
-                .logging(mapLogging(bulkDto))
+                .logging(mapLogging())
                 .build();
     }
 
@@ -41,7 +43,7 @@ public class DtoToYmlMapper {
         return dto.getDataSources().stream()
                 .collect(Collectors.toMap(
                         DataSourceDto::getName,
-                        this::mapDatasource
+                        DtoToYmlMapper::mapDatasource
                 ));
     }
 
@@ -68,7 +70,7 @@ public class DtoToYmlMapper {
     private List<StepYmlBase> mapSteps(List<Step> steps) {
         return steps.stream()
                 .sorted(Comparator.comparingInt(Step::getOrder))
-                .map(this::mapStep)
+                .map(DtoToYmlMapper::mapStep)
                 .toList();
     }
 
@@ -173,14 +175,14 @@ public class DtoToYmlMapper {
                 .toList();
     }
 
-    private LoggingYml mapLogging(BulkDto dto) {
+    private LoggingYml mapLogging() {
         return LoggingYml.builder()
                 .level(Map.of(
                         "root", "INFO",
                         "com.marbl.xxxxx", "DEBUG"
                 ))
                 .pattern(LoggingPatternYml.builder()
-                        .console("[%d{dd-MM-yyyy HH:mm:ss.SSSS}] ...")
+                        .console("[%d{dd-MM-yyyy HH:mm:ss.SSSS}][%-4thread][%-0X{stepName}][%-0X{chunk}][%-3level][%-20logger{1}] %msg%n")
                         .build())
                 .build();
     }
