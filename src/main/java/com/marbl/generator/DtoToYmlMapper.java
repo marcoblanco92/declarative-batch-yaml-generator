@@ -3,6 +3,7 @@ package com.marbl.generator;
 import com.marbl.generator.model.mapper.*;
 import com.marbl.generator.model.yml.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,6 +65,7 @@ public class DtoToYmlMapper {
 
     private List<StepYmlBase> mapSteps(List<Step> steps) {
         return steps.stream()
+                .sorted(Comparator.comparingInt(Step::getOrder))
                 .map(this::mapStep)
                 .toList();
     }

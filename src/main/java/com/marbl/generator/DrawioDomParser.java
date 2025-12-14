@@ -200,6 +200,7 @@ public class DrawioDomParser {
                 step.setName(name);
                 step.setType(type);
                 step.setParentId(parentId);
+                step.setOrder(Integer.parseInt(obj.getAttribute("order")));
 
                 String chunk = obj.getAttribute("chunk_size");
                 if (!chunk.isEmpty()) {
@@ -249,6 +250,7 @@ public class DrawioDomParser {
                 t.setSource(source);
                 t.setName(name);
                 t.setParentId(parentId);
+                t.setOrder(Integer.parseInt(obj.getAttribute("order")));
                 yield t;
             }
 

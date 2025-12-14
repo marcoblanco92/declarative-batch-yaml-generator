@@ -26,12 +26,14 @@ public class DrawioToDtoMapper {
                         .chunkSize(step.getChunkSize())
                         .listeners(new ArrayList<>())
                         .conditionalNext(new HashMap<>())
+                        .order(step.getOrder())
                         .build();
                 stepsById.put(step.getId(), stepDto);
             } else if (comp instanceof DrawioTasklet tasklet) {
                 TaskletDto taskletDto = TaskletDto.builder()
                         .name(tasklet.getName())
                         .conditionalNext(new HashMap<>())
+                        .order(tasklet.getOrder())
                         .build();
                 stepsById.put(tasklet.getId(), taskletDto); // TaskletYml implementa Step
             }

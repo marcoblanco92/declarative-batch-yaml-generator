@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class DrawioStep extends DrawioComponent {
     private Integer chunkSize;
+    private Integer order;
 }

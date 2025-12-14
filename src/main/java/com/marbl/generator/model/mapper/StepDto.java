@@ -23,4 +23,5 @@ public class StepDto implements Step {
     private List<ListenerDto> listeners = new ArrayList<>();
     private Map<String, String> conditionalNext = new HashMap<>(); // flussi condizionali: condizione -> stepName
     private String nextStep;            // step successivo (Next/SimpleFlow)
+    private Integer order;
 }

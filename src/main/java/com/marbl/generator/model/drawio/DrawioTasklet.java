@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class DrawioTasklet extends DrawioComponent {
+    private Integer order;
 }

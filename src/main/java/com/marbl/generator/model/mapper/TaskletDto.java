@@ -16,4 +16,5 @@ public class TaskletDto implements Step {
     private String name;
     private Map<String, String> conditionalNext = new HashMap<>(); // flussi condizionali: condizione -> stepName
     private String nextStep;
+    private Integer order;
 }
